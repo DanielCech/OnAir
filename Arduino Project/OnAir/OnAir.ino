@@ -4,7 +4,8 @@
 #define PIN            4
 // How many NeoPixels are attached to the ESP8266?
 #define NUMPIXELS      24
-#define INTENSITY      0.1
+#define HALFPIXELS     12
+#define INTENSITY      0.15
 
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 int offset;
@@ -25,9 +26,9 @@ void loop() {
   }
   
   for (int i = 0; i < NUMPIXELS; i++) {
-    uint8_t red = uint8_t(intensity * (128 + 128 * sin(value + i * 0.02)));
-    uint8_t green = uint8_t(intensity * (128 + 128 * sin(value * i * 1.01 + i * 0.02)));
-    uint8_t blue = uint8_t(intensity * (128 + 128 * sin(value * 1.03 * i + i * 0.02)));
+    uint8_t red = uint8_t(intensity * (128 + 128 * sin(value + (i % HALFPIXELS) * 0.02)));
+    uint8_t green = uint8_t(intensity * (128 + 128 * sin(value * (i % HALFPIXELS) * 1.01 + i * 0.02)));
+    uint8_t blue = uint8_t(intensity * (128 + 128 * sin(value * 1.03 * (i % HALFPIXELS) + i * 0.02)));
 
     pixels.setPixelColor(i, pixels.Color(red, green, blue));
     pixels.show(); // This sends the updated pixel color to the hardware.
